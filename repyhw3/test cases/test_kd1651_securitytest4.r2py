@@ -1,0 +1,25 @@
+#This tries to write 'MZ' at other offsets and checks if exception is raised. Logically, it should be written at other offsets giveen it is not crossing EOF!.
+#hence security monitor fails (wrongly stops write) if output is 'Accuracy Bug Found...'
+
+
+# Open a file
+myfile=openfile("look.txt", True)
+string1 = 'MZ'
+
+# Attempt to write "MZ" to the file
+try:
+  myfile.writeat(string1, 3)
+  myfile.writeat(string1, 4)
+  
+ 
+# It raised an Exception (as it was supposed to):
+except ValueError:
+  log("Accuracy Bug Found. Could not write 'MZ' at offset other than 0\n")  
+ 
+# No Exception was raised
+else:
+  pass #no output if there is no bug
+ 
+finally:
+  # Close the file after our attempt.
+  myfile.close()

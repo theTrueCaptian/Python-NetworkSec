@@ -1,0 +1,46 @@
+# This attack tries to emulate the possibility of writing MZ separately using threadds. One thread tries to write M at offset 0. The second thread tries to write 
+# Z at offset 1. If both writes are successful, the security is breached.
+
+def writeFileM(): 
+	
+	# Trying to write MX at the beginning of the file.
+	try:
+  		myfile.writeat("MX", 0)
+
+	# ValueError Exception Raised as expected.
+	except ValueError:
+		log("Inaccurate security\n")
+
+ 	# If value at offset 1 is Z then security is breached. 
+	else:
+
+		value = myfile.readat(1,1)
+		if value == "Z":
+			log("Security Breached\n")
+		pass
+
+	finally:
+  		pass
+
+def writeFileZ(): 
+	# Trying to write ZY at the offset 1
+	try:
+  		myfile.writeat("ZY", 1)
+
+	except ValueError:
+  		log("Inaccurate security\n")
+ 
+ 	# If value at offset 0 is M then security is breached. 
+	else:
+		
+		value = myfile.readat(1,0)
+		if value == "M":
+			log("Security Breached\n")
+
+	finally:
+  		pass
+
+myfile = openfile("look.txt", True)
+
+createthread(writeFileM)
+createthread(writeFileZ)

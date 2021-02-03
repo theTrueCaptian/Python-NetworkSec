@@ -1,0 +1,19 @@
+# Open a file
+filename = "look.txt"
+removefile(filename)
+myfile=openfile(filename, True)
+ 
+# Attempt to write "MZ" to the file
+try:
+  myfile.writeat(" ", 0)
+  myfile.writeat("MZ", 2)
+ 
+# It raised an Exception (as it was supposed to):
+except:
+  pass #an error should have been thrown
+ 
+# No Exception was raised
+else:
+  log("Incorrectly trapped a seek beyond end of file\n")
+ 
+

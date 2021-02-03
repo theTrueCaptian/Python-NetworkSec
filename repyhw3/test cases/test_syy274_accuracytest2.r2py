@@ -1,0 +1,26 @@
+# Test Case 2- Accuracy Test: Checks if maxflesizelimit can be set back to 'None' by the user
+# Shao Yang
+
+idTest = 5
+filenameTest = "testfile_"+ str(idTest) + ".txt"
+
+# log("\n=======>Test Case " + str(idTest) + "<=======\n");
+
+try:
+  if filenameTest in listfiles():
+    removefile(filenameTest)
+  myfile=openfile(filenameTest,True)  #Open a file
+
+
+  myfile.setmaxfilesize(10);
+  myfile.setmaxfilesize(None);
+
+  #Close the file
+  myfile.close()
+
+except Exception as e:
+  log("===>Test Case: " + str(idTest) + " Failed\n")
+  # log("Error: Unknown Exception: " + str(e) + "\n")
+else:
+  pass
+  # log("Test Case - " + str(idTest) + " Passed\n")

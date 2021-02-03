@@ -1,0 +1,19 @@
+# This attack file is to test if the security layer allows writing MZ in the file at any other location except the beginning.
+
+myfile = openfile("testfile.txt", True)
+ 
+# Trying to write MZ at the beginning of the file.
+try:
+  myfile.writeat("ABCD", 0)
+  myfile.writeat("MZ", 1)
+ 
+# ValueError Exception Raised, security inaccurate.
+except ValueError:
+  log("Security layer inaccurate. MZ not allowed to write in file.")
+ 
+# If Exception was not raised.
+else:
+  pass
+ 
+finally:
+  myfile.close()

@@ -1,0 +1,25 @@
+### Use thread
+# Open a file
+myfile=openfile("look.txt", True)
+myfile.writeat("AB", 0)
+
+def write():
+  def run():
+    try:
+      #myfile.writeat("AB", 0)
+      myfile.writeat("M", 0)
+      myfile.writeat("Z", 1)
+
+    except ValueError:
+      log("Wrote an MZ!!!")
+      exitall()
+    else:
+      pass
+    finally:
+      myfile.close()
+  return run
+
+
+for i in range(50):
+  writethread = write()
+  createthread(writethread)

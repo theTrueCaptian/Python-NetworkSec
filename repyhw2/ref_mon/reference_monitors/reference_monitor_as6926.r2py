@@ -1,0 +1,103 @@
+"""
+Abdullah Sarwar - as6926 - asarwar@nyu.edu
+
+CS3923 Computer Security 
+Professor Memon
+
+HW8 - Security Layer
+Submitted: 4/18/2016
+"""	
+
+class SecureFile():
+  def __init__(self,file,filename):
+    #Added thread safe locking mechanism
+    self.file = file
+    self.filename = filename
+    self.lock = createlock()
+
+  def readat(self,size,offset):
+    #Thread safe readat
+    try:
+      self.lock.acquire(True)
+      return self.file.readat(size,offset)
+    except:
+      pass
+    finally:
+      self.lock.release()
+
+  def writeat(self, data, offset):
+    #I did not make this thread safe because it was getting a little too complicated
+    
+    #Efficiency
+    if offset == 0 and type(data)==str:
+
+      #Test Case 1:
+      if data[0:2] == "MZ":
+        raise ValueError("Cannot Write MZ")
+      
+      
+      elif offset < 2:
+        #Test Case 2: Securing against headers
+        m2Position = data.find("M")
+        z2Position = data.find("Z")
+
+        if (mPosition == 0) or (zPosition >= 0 and zPosition < 2):
+          raise ValueError("Cannot Write MZ")
+
+
+        #Test Case 3: Checks first 3 chars
+        newHeader = self.file.readat(2,0)
+        m3Position = newHeader.find("M")
+        z3Position = newHeader.find("Z")
+        if (m2Position == 0 and z2Position == 1 and offset == 0):
+          raise ValueError("Cannot Write MZ")
+        elif (m3Position == 0 and z3Position == 0 and offset == 0):
+          raise ValueError("Cannot Write MZ")
+        elif (m3Position == 1 and z3Position == 0 and offset == 1):
+          raise ValueError("Cannot Write MZ")
+        elif (m3Position == 1 and z3Position == 0 and offset == 1):
+          raise ValueError("Cannot Write MZ") 
+
+      else:
+        return self.file.writeat(data,offset)
+    
+
+  def close(self):
+    #Thread Safe Close
+    try:
+      self.lock.acquire(True)
+      return self.file.close()
+    except:
+      pass
+    finally:
+      self.lock.release()
+
+def secure_openfile(filename, create):
+  #Thread Safe Open
+  try:
+    file = openfile(filename, create)
+    return SecureFile(file, filename)
+  except:
+    pass
+
+# You can ignore the code below here. 
+# It just sets of the security layer so that the application calls it instead of
+# the original API functions.
+TYPE="type"
+ARGS="args"
+RETURN="return"
+EXCP="exceptions"
+TARGET="target"
+FUNC="func"
+OBJC="objc"
+
+sec_file_def = {"obj-type":SecureFile,
+    "name":"SecureFile",
+    "readat":{TYPE:FUNC,ARGS:((int,long,type(None)),(int,long)),EXCP:Exception,RETURN:str,TARGET:SecureFile.readat},
+    "writeat":{TYPE:FUNC,ARGS:(str,(int,long)),EXCP:Exception,RETURN:(None),TARGET:SecureFile.writeat},
+    "close":{TYPE:FUNC,ARGS:None,EXCP:None,RETURN:(bool,type(None)),TARGET:SecureFile.close}
+}
+
+CHILD_CONTEXT_DEF["openfile"] = {TYPE:OBJC,ARGS:(str,bool),EXCP:Exception,RETURN:sec_file_def,TARGET:secure_openfile}
+
+secure_dispatch_module()

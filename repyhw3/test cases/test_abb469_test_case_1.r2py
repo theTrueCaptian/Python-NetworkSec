@@ -1,0 +1,20 @@
+# Open a file
+filename = "look.txt"
+removefile(filename)
+myfile=openfile(filename, True)
+ 
+# Attempt to write "MZ" to the file
+try:
+  myfile.writeat("MZ", 0)
+ 
+# It raised an Exception (as it was supposed to):
+except ValueError:
+  pass #no output if there is no bug
+ 
+# No Exception was raised
+else:
+  log("Wrote an MZ!!!\n")
+ 
+finally:
+  # Close the file after our attempt.
+  myfile.close()

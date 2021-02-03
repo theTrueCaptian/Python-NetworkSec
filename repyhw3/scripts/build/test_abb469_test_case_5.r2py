@@ -1,0 +1,21 @@
+# Open a file
+filename = "look.txt"
+removefile(filename)
+myfile=openfile(filename, True)
+ 
+# Attempt to write "MZ" to the file
+try:
+  myfile.writeat(" Z", 0)
+  myfile.writeat("M", 0)
+ 
+# It raised an Exception (as it was supposed to):
+except ValueError:
+  pass #an error should have been thrown
+ 
+# No Exception was raised
+else:
+  log("did not trap an Z written then a M written\n")
+ 
+finally:
+  # Close the file after our attempt.
+  myfile.close()

@@ -1,0 +1,16 @@
+#writing M and Z seperately
+myfile=openfile("look.txt",True)
+ 
+
+try:
+    myfile.writeat("M",1)
+    myfile.writeat("Z",0)
+ 
+
+if ValueError = 0:
+    log("circumvented the layer")
+ 
+ 
+finally:
+    
+    myfile.close()

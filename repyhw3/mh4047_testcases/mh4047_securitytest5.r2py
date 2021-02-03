@@ -1,0 +1,34 @@
+
+def write (char, offset, successmessage):
+  count = 0
+  # Open a file
+  myfile=openfile("look.txt", True)
+   
+  # Attempt to write "MZ" to the file
+  try:
+    # Write the character one by one
+    myfile.writeat(char, offset)
+  # It raised an Exception :
+  except ValueError:
+    pass
+  except FileError:
+    pass 
+  # No Exception was raised (as it wasn't supposed to)
+  else:
+    count =  1
+    log(successmessage)
+    pass
+   
+  finally:
+    # Close the file after our attempt.
+    myfile.close()
+
+  return count
+
+
+# Separately write each letter with a different openfile
+count = write ("M", 0, "")
+count = count + write ("Z", 1, "") 
+
+if count==2:
+  log("Test 5: MZ characters written!\n")

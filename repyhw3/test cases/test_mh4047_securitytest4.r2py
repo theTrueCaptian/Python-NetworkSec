@@ -1,0 +1,38 @@
+
+
+def attack():
+   
+  myfile=None
+  try:
+    # Open a file
+    myfile=openfile("look.txt", True)
+  
+    # Attempt to write "MZ" to the file
+    myfile.writeat("MZ", 0)
+   
+  # It raised an Exception :
+  except ValueError:
+    #log("The security layer blocked a valid write!!!")
+    pass
+  except RepyException:
+    pass
+  # No Exception was raised (as it wasn't supposed to)
+  else:
+    log("Test 4: Wrote an MZ!!!\n")
+    pass
+   
+  finally:
+    if myfile != None:
+      # Close the file after our attempt.
+      myfile.close()
+
+
+# Spawn multiple threads
+threads = []
+for i in range(5):
+  try:
+    t = createthread(attack)
+    #threads.append(t)
+    #t.start()
+  except FileInUseError:
+    pass

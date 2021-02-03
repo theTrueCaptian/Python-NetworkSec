@@ -1,0 +1,17 @@
+# Open a file
+myfile=openfile("look.txt", True)
+ 
+try:
+  # Avoiding SeekPastEndOfFileError (since EOF is at 
+  # offset 0 in a newly created file)
+  myfile.writeat("MA", 0)
+ 
+except ValueError:
+  log("The security layer blocked a valid write!!!")
+
+else:
+  pass
+ 
+finally:
+  # Close the file after our attempt.
+  myfile.close()

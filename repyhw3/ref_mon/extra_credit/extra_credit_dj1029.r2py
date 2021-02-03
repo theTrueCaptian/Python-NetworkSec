@@ -1,0 +1,19 @@
+#Open a file
+myfile=openfile("look.txt",True)
+
+def WriteMZ(): 
+	# Attempt to write "MZ" to the file
+	try:
+		myfile.writeat("te",0)
+ 	#To handle the ValueError exception that came from the Security Layer:
+	except ValueError:		
+		return
+	#No Exception was raised
+	else:
+		return 
+	finally:
+		#Close the file after our attempt.
+		myfile.close()
+
+WriteMZ()
+

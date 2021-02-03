@@ -1,0 +1,21 @@
+# This testcase checks if the security layer blocks a valid write, which is- 'MY'; and also if it blocks 'M' at the 0th location.
+# Open a file
+myfile=openfile("look.txt", True)
+ 
+# Attempt to write "MY" to the file
+try:
+  myfile.writeat("MY", 0)
+ 
+# It raised an Exception (as it was supposed to):
+except ValueError:
+  log("The security layer blocked a valid write!!!")
+
+# What if it raised something other than ValueError?
+ 
+# No Exception was raised (as it wasn't supposed to)
+else:
+  pass
+ 
+finally:
+  # Close the file after our attempt.
+  myfile.close()

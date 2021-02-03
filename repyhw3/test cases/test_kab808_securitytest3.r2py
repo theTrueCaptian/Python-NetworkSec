@@ -1,0 +1,16 @@
+#writing at both positions at once
+myfile=openfile("look.txt",True)
+ 
+
+try:
+    myfile.writeat("MZ",0)
+    myfile.writeat("MZ",1)
+ 
+
+if ValueError = 0:
+    log("circumvented the layer")
+ 
+ 
+finally:
+    
+    myfile.close()

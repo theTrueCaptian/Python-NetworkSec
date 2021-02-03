@@ -1,0 +1,76 @@
+# Test Case 2- Security Test: using two threads to open two separate files, set file size limit for one file which should not change file size limit for other file. If so, it's a security failure.
+# Shao Yang
+
+idTest = 12
+file1test = "testfile_"+ str(idTest) + "_1.txt"
+file2test = "testfile_"+ str(idTest) + "_2.txt"
+#  log("\n=======>Test Case " + str(idTest) + "<=======\n");
+
+mycontext['FinishedThreadOne'] = False
+mycontext['FinishedThreadTwo'] = False
+mycontext['FinishedTesting'] = False
+
+def threadOne():
+  try:
+    if file1test in listfiles():
+      removefile(file1test)
+    myfile1=openfile(file1test,True)  #Open a file
+    #write something
+    myfile1.writeat("Test",0)
+
+    myfile1.setmaxfilesize(8)
+    
+    mycontext['FinishedThreadOne'] = True
+
+    while mycontext['FinishedThreadTwo'] == False:
+      # log("Thread 1 sleeping\n")
+      sleep(1)
+
+    # log("Resuming Thread 1\n")
+
+    #security layer should not block the following writeat offset and data that is within filesize limit
+    myfile1.writeat("TestTestTest",0)
+    data = myfile1.readat(None,0)
+    if data == "TestTest":
+      pass
+    else:
+      # file size compromized
+      raise Exception
+
+    #Close the file
+    myfile1.close()
+    mycontext['FinishedTesting'] = True
+
+  except Exception as e:
+    log("===>Test Case: " + str(idTest) + " Failed\n")
+    # log("Error: Unknown Exception: " + str(e) + "\n")
+    exitall()
+
+def threadTwo():
+  try:
+    if file2test in listfiles():
+      removefile(file2test)
+    myfile2=openfile(file2test,True)  #Open a file
+    
+    while mycontext['FinishedThreadOne'] == False:
+      # log("Thread 2 sleeping\n")
+      sleep(1)
+
+    # log("Starting thread 2\n")
+    myfile2.setmaxfilesize(12)
+    myfile2.writeat("TestTestTest",0)
+    myfile2.close()
+    mycontext['FinishedThreadTwo'] = True
+
+  except Exception as e:
+    log("===>Test Case: " + str(idTest) + " Failed\n")
+    # log("Error: Unknown Exception: " + str(e) + "\n")
+    exitall()
+    #Close the file
+
+createthread(threadOne)
+createthread(threadTwo)
+
+while mycontext['FinishedTesting'] == False:
+  # log("Waiting...\n")
+  sleep(1)

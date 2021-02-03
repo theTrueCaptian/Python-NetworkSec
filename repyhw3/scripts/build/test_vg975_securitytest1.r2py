@@ -1,0 +1,18 @@
+# This attack file is to test if the security layer blocks writing MZ at the starting of the file i.e. at offset 0
+
+myfile = openfile("testfile.txt", True)
+ 
+# Trying to write MZ at the beginning of the file.
+try:
+  myfile.writeat("MZ", 0)
+ 
+# ValueError Exception Raised as expected.
+except ValueError:
+  pass
+ 
+# If Exception was not raised, the security layer failed.
+else:
+  log("MZ written to the beginning of the file. Security layer breached.")
+ 
+finally:
+  myfile.close()

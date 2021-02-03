@@ -1,0 +1,23 @@
+# Open a file
+myfile=openfile("look.txt", True)
+ 
+# Attempt to write valid data to the file
+try:
+  # Avoiding SeekPastEndOfFileError (since EOF is at 
+  # offset 0 in a newly created file)
+  myfile.writeat("PO", 10)
+  myfile.writeat("MZ", 10)
+
+# It raised an Exception :
+except ValueError:
+  log("The security layer blocked a valid write!!!")
+
+# What if it raised something other than ValueError?
+ 
+# No Exception was raised (as it was supposed to)
+else:
+  pass
+ 
+finally:
+  # Close the file after our attempt.
+  myfile.close()

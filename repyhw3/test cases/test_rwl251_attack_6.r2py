@@ -1,0 +1,37 @@
+# This attack attempts to force an MZ by using multiple threads. Will work if there is no locking done!
+
+def writeM():
+  for i in range(0,1000):
+    if(myfile.readat(0,2) == "MZ"):
+      log("Wrote an MZ at the beginning!!")
+      return;
+    if(i%2 == 0):
+      myfile.writeat("M", 0)
+    else:
+      myfile.writeat("A", 0)
+
+def writeZ():
+  for i in range(0,1000):
+    if(myfile.readat(0,2) == "MZ"):
+      log("Wrote an MZ at the beginning!!")
+      return;
+    if(i%2 == 0):
+      myfile.writeat("Z", 1)
+    else:
+      myfile.writeat("A", 1)
+
+# Open a file
+myfile=openfile("look.txt",True)
+ 
+# Attempt to write "ZM" to the file, to see if this is allowed (it should be)
+try:
+    myfile.writeat("AA",0)
+    createthread(writeM)
+    createthread(writeZ)
+ 
+# It raised an Exception (as it was supposed to):
+except ValueError:
+    noError=True
+ 
+finally:
+    doNothing = True

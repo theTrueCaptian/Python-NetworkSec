@@ -1,0 +1,68 @@
+#threading check to ensure writing m and z at the same time does not cause a problem
+
+# Open a file
+myfile=openfile("look.txt", True)
+
+
+def write_m():
+	try:
+		myfile.writeat("M", 0)
+	except:
+		pass
+
+def write_z():
+	try:
+		myfile.writeat("Z", 1)
+	except:
+		pass
+
+
+createthread(write_m)
+createthread(write_z)
+createthread(write_m)
+createthread(write_z)
+createthread(write_m)
+createthread(write_z)
+createthread(write_m)
+createthread(write_z)
+createthread(write_m)
+createthread(write_z)
+createthread(write_m)
+createthread(write_z)
+createthread(write_m)
+createthread(write_z)
+createthread(write_m)
+createthread(write_z)
+createthread(write_m)
+createthread(write_z)
+createthread(write_m)
+createthread(write_z)
+createthread(write_m)
+createthread(write_z)
+createthread(write_m)
+createthread(write_z)
+createthread(write_m)
+createthread(write_z)
+createthread(write_m)
+createthread(write_z)
+createthread(write_m)
+createthread(write_z)
+
+try:
+  myfile.writeat("Z", 1)
+  myfile.writeat("M", 0)
+ 
+# It raised an Exception :
+except ValueError:
+  pass
+
+# What if it raised something other than ValueError?
+ 
+# No Exception was raised (as it wasn't supposed to)
+else:
+  log("FAILED TEST")
+  pass
+ 
+finally:
+  # Close the file after our attempt.
+  myfile.close()

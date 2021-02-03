@@ -1,0 +1,19 @@
+# Open a file
+myfile=openfile("look.txt",True)
+ 
+# Using escape sequence \b backspace to write "MZ" to the file
+try:
+    myfile.writeat("M\bZ",0)
+    
+
+# pass if security layer blocks or generates an exception
+except ValueError:
+    pass
+ 
+# Test case successful, able to write MZ
+else:
+    log("\nSecurity Bug: Write Okay\n")
+ 
+finally:
+    # Close the file after our attempt.
+    myfile.close()

@@ -1,0 +1,48 @@
+# Open a file
+myfile=openfile("look.txt",True)
+ 
+# Attempt to write "MZ" to the file
+def threadOne():
+    try:
+        for i in range (0,100):
+            myfile.writeat("Random",i)
+        for j in range(1,100):
+            myfile.writeat("Z",j)
+        for k in range (0,100):
+            myfile.writeat("M",0)
+ 
+    # It raised an Exception (as it was supposed to):
+    except ValueError:
+        pass
+ 
+    # No Exception was raise
+    else:
+        log("Wrote an MZ!!!\n")
+ 
+    finally:
+        # Close the file after our attempt.
+        myfile.close()
+
+def threadTwo():
+    try:
+        for i in range (0,100):
+            myfile.writeat("Random",i)
+        for j in range(1,100):
+            myfile.writeat("Z",j)
+        for k in range (0,100):
+            myfile.writeat("M",0)
+ 
+    # It raised an Exception (as it was supposed to):
+    except ValueError:
+        pass
+ 
+    # No Exception was raise
+    else:
+        log("Wrote an MZ!!!\n")
+ 
+    finally:
+        # Close the file after our attempt.
+        myfile.close()
+
+createthread(threadOne)
+createthread(threadTwo)

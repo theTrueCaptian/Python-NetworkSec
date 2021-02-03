@@ -1,0 +1,13 @@
+myfile=openfile("look.txt",True)
+
+try:
+  myfile.writeat("MZ",1)
+
+except ValueError:
+  log("The security layer correctly blocked the write!!")
+
+else:
+  log("Wrote an MZ!!")
+
+finally:
+  myfile.close()

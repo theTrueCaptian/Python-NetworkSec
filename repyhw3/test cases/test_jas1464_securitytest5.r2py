@@ -1,0 +1,27 @@
+#Jubin Soni (jas1464)
+#Test case 5: Writing ABCMZ, just to check if it allows writing MZ anywhere in the file.
+
+
+
+myfile=openfile("look.txt", True)
+ 
+# Attempt to write "MZ" to the file
+try:
+  # Avoiding SeekPastEndOfFileError (since EOF is at 
+  # offset 0 in a newly created file)
+  
+  myfile.writeat("ABCMZ", 0)
+  
+  
+ 
+# It raised an Exception :
+except ValueError:
+  log("The security layer valid write!!!")
+
+
+else:
+  log("wrote ABCMZ, as it supposed to allow MZ anywhere in the file")
+ 
+finally:
+  # Close the file after our attempt.
+  myfile.close()

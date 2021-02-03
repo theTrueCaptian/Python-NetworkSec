@@ -1,0 +1,115 @@
+TYPE="type"
+ARGS="args"
+RETURN="return"
+EXCP="exceptions"
+TARGET="target"
+FUNC="func"
+OBJC="objc"
+
+class SecureFile():
+  def __init__(self,file,size):
+
+    # globals reference 
+    myinfo['debug'] = False   
+    myinfo['read'] = False
+    myinfo['write'] = False
+    myinfo['append'] = False
+
+    #permissions and access
+    myinfo['lock'] = createlock()
+    pmSet = set()
+
+
+    # local reference to the underlying file
+    self.file = file
+    self.size = size  
+
+  def maxfilelength(self,sz):
+    self.size=sz
+
+  def setappend(self,enabled):
+    myinfo['append'] = enabled
+
+  def setread(self,enabled):
+    myinfo['read'] = enabled
+
+  def setwrite(self,enabled):
+    myinfo['write'] = enabled
+
+  def readat(self,bytes,offset):
+    try:
+      if not myinfo['read']:
+        return
+      else:
+        return self.file.readat(bytes,offset)
+    except ValueError:
+      pass
+  def writeat(self,data,offset):
+    if myinfo['write'] and myinfo['append']:   # write and append
+      if offset == 0 and self.size == 0:  
+        self.file.writeat(data,offset)  # Write the requested data to the file using the sandbox's writeat call
+        self.size = len(data)
+      else:
+        self.file.writeat(data,offset)
+        if self.size < (offset + len(data)):
+          self.size = offset + len(data)
+    if not myinfo['write'] and not myinfo['append']:  # no write and no append
+      return
+    if myinfo['write'] and not myinfo['append']:  # write and not append
+    #raise error if user try to write beyond permitted file size
+      if(offset > self.size) or self.size == 0:
+        raise SeekPastEndOfFileError("Tried to write past the end!")
+      else:
+        str = ""
+        j = 0
+        for i in data:
+          if j < (self.size - offset):
+            str += i
+          j= j + 1
+        self.file.writeat(str,offset)
+    if not myinfo['write'] and myinfo['append']:  #not write and append
+      if (offset == self.size):
+        self.file.writeat(data,offset) # Write the requested data to the file using the sandbox's writeat call
+        self.size = self.size + len(data)
+      if offset < self.size and (len(data) > (self.size-offset)):
+        str=""
+        j= (self.size - offset)
+        for i in data:
+          if j > 0:
+            j= j - 1
+          else: 
+            str += i
+        self.file.writeat(str,self.size)
+        self.size = self.size + len(str)
+      else:
+        return
+
+  
+  def close(self):
+    saveNewFile = openfile("newtestfile.txt", True)
+    newstat = str(pmSet).strip('set([])')
+    saveNewFile.writeat(newstat, 0)
+    saveNewFile.close
+    return self.file.close()
+
+
+sec_file_def = {"obj-type":SecureFile,
+                "name":"SecureFile",
+                "readat":{TYPE:FUNC,ARGS:((int,long),(int,long)),EXCP:Exception,RETURN:(str,type(None)),TARGET:SecureFile.readat},
+                "writeat":{TYPE:FUNC,ARGS:(str,(int,long)),EXCP:Exception,RETURN:(int,type(None)),TARGET:SecureFile.writeat},
+                "setwrite":{TYPE:FUNC,ARGS:[bool],EXCP:Exception,RETURN:(type(None)),TARGET:SecureFile.setwrite},
+                "setread":{TYPE:FUNC,ARGS:[bool],EXCP:Exception,RETURN:(type(None)),TARGET:SecureFile.setread},
+                "setappend":{TYPE:FUNC,ARGS:[bool],EXCP:Exception,RETURN:(type(None)),TARGET:SecureFile.setappend},
+                "maxfilelength":{TYPE:FUNC,ARGS:[int],EXCP:Exception,RETURN:(type(None)),TARGET:SecureFile.maxfilelength},
+                "close":{TYPE:FUNC,ARGS:None,EXCP:None,RETURN:(bool,type(None)),TARGET:SecureFile.close}
+           }
+
+def secure_openfile(filename, create):
+  f = openfile(filename,create)
+  filecontents = f.readat(None,0)
+  size = len(filecontents)
+  return SecureFile(f,size)
+  
+CHILD_CONTEXT_DEF["openfile"] = {TYPE:OBJC,ARGS:(str,bool),EXCP:Exception,RETURN:sec_file_def,TARGET:secure_openfile}
+
+secure_dispatch_module()

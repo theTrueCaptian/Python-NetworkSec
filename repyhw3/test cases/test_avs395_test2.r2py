@@ -1,0 +1,18 @@
+# Open a file
+myfile=openfile("look.txt",True)
+ 
+# Attempt to write "YZ" and then replace Y with M in the file
+try:
+  myfile.writeat("YZ",0)
+  myfile.writeat("M",0)
+ 
+# It raised an Exception :
+except ValueError:
+  pass #no output
+ 
+# If test case was successfull in writing MZ
+else:
+  log("\n Write okay!\n")
+finally:
+  # Close the file after our attempt.
+  myfile.close()

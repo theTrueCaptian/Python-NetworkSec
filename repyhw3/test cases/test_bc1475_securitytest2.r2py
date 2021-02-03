@@ -1,0 +1,18 @@
+# Open a file
+myfile=openfile("look.txt", True)
+ 
+# Attempt to write "MZ" to the file on 2 bytes
+try:
+  myfile.writeat("MZ", 2)
+ 
+# It raised an Exception (as it was supposed to):
+except ValueError:
+  log("The security layer blocked a valid write!!!")
+ 
+# No Exception was raised
+else:
+  pass #no output if there is no bug
+ 
+finally:
+  # Close the file after our attempt.
+  myfile.close()

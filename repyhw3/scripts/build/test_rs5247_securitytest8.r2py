@@ -1,0 +1,37 @@
+# Open a file
+
+myfile=openfile("look.txt", True)
+
+ 
+# Attempt to write "MZ" to the file
+
+try:
+
+  # Avoiding SeekPastEndOfFileError (since EOF is at 
+# offset 0 in a newly created file)
+
+  myfile.writeat("MZ", 0)
+
+  myfile.writeat("MZ", 0)
+
+  myfile.writeat("MZ", 1)
+
+  myfile.writeat("MZ", 0)
+
+ 
+# It raised an Exception:
+
+except ValueError:
+
+  pass
+
+
+else:
+
+  log("The security did not block invalid MZ!!!")
+
+finally:
+
+  # Close the file after our attempt.
+
+  myfile.close()

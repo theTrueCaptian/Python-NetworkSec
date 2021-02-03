@@ -1,0 +1,46 @@
+#This test tries to write M adn Z separately at offset 0 and 1 respectively. End result would be 'MZ' at offeset 0 in the file which is a security flaw and 
+#hence security monitor fails if output is 'Security Bug Found...'
+
+
+# Open a file
+myfile=openfile("look.txt", True)
+string1 = 'MPWHAKS'
+string2 = 'LMNPQ'
+string3 = 'Z '
+
+try:
+  myfile.writeat(string1, 0)
+ 
+# It raised an Exception (as it was supposed to):
+except ValueError:
+  log("Accuracy Bug Found. Could not write legitimate \n")
+ 
+# No Exception was raised
+else:
+  pass
+
+try:
+  myfile.writeat(string2, 3)		#can be anyoffset in this case except 0
+ 
+# It raised an Exception (as it was supposed to):
+except ValueError:
+  log("Accuracy Bug Found. Could not write legitimate \n")
+ 
+# No Exception was raised
+else:
+  pass
+
+try:
+  myfile.writeat(string3, 1)		#trying to write Z at offset 1
+ 
+# It raised an Exception (as it was supposed to):
+except ValueError:
+  pass
+ 
+# No Exception was raised
+else:
+  log("Security Bug Found. Wrote 'MZ' on to the file at offset 0\n")
+
+finally:
+  # Close the file after our attempt.
+  myfile.close()

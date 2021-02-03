@@ -1,0 +1,42 @@
+# THREADING
+
+myfile = openfile("look.txt", True)	
+
+# if final gets called twice, that means both writes were successful
+# and this failed the test case
+
+mycontext["fin"] = 0
+def final():
+    mycontext["fin"] = mycontext["fin"] + 1
+    if mycontext["fin"] == 2:
+        log("[SECURITY] Test case 8 (threading) failed")
+
+
+def writeM():
+    try:
+        myfile.writeat("   ",0)
+	myfile.writeat("M",0)
+    except ValueError:
+        True
+    else:
+        final()
+
+
+def writeZ():
+    try:
+        myfile.writeat("   ",0)
+	myfile.writeat("Z",1)
+    except ValueError:
+        True
+    else:
+        final()
+
+
+
+createthread(writeM)
+createthread(writeZ)
+
+
+
+
+

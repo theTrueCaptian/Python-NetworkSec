@@ -1,0 +1,17 @@
+#Open a file
+myfile=openfile("look.txt",True)
+ 
+# Attempt to write "MZ" to the file
+try:
+	myfile.writeat("AMZ",0)
+#To handle the ValueError exception that came from the Security Layer:
+except ValueError:		
+	log("Couldn't Write to the file. Action Blocked!\n")
+except Exception:
+	log("Unexpected Exception!\n")	
+#No Exception was raised
+else:		
+	pass 
+finally:
+	#Close the file after our attempt.
+	myfile.close()

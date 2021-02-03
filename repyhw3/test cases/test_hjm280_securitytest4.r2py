@@ -1,0 +1,23 @@
+#Accuracy check to ensure doesn't block incorrectly
+
+
+# Open a file
+myfile=openfile("look.txt", True)
+
+try:
+  myfile.writeat("MZ", 1)
+
+ 
+# It raised an Exception :
+except ValueError:
+  log("FAILED TEST")
+  pass
+
+ 
+# No Exception was raised (as it wasn't supposed to)
+else:
+  pass
+ 
+finally:
+  # Close the file after our attempt.
+  myfile.close()

@@ -1,0 +1,18 @@
+# Open a file
+myfile=openfile("look.txt",True)
+
+try:
+    data="MZ"
+    myfile.writeat(data,0)
+ 
+# It raised an Exception (as it was supposed to):
+except ValueError:
+    log("The security layer correctly blocked the write!!!\n")
+ 
+# No Exception was raise
+else:
+    pass
+ 
+finally:
+    # Close the file after our attempt.
+    myfile.close()

@@ -1,0 +1,26 @@
+# Open a file
+myfile=openfile("look.txt", True)
+ 
+# Attempt to write valid and invalid data together to the file
+try:
+  # Avoiding SeekPastEndOfFileError (since EOF is at 
+  # offset 0 in a newly created file)
+  myfile.writeat("PO", 0)
+  myfile.writeat("MZ", 0)
+
+  #attempting to write MZ at 0 blocks writeat and hence valid data PO cannot be written
+
+ 
+# It raised an Exception :(as it was supposed to)
+except ValueError:
+  log("The security layer blocked a valid write!!!")
+
+# What if it raised something other than ValueError?
+ 
+# No Exception was raised 
+else:
+  pass
+ 
+finally:
+  # Close the file after our attempt.
+  myfile.close()

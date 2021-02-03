@@ -1,0 +1,16 @@
+# open the file
+myfile = openfile("look.txt", True)
+
+myfile.writeat("  ",0)
+try:
+    myfile.writeat("Z", 1)
+    myfile.writeat("M", 0)
+except ValueError:
+    True
+else:
+    log("[SECURITY] Test Case 3 failed")
+
+
+myfile.close()
+
+

@@ -1,0 +1,15 @@
+# Open a file
+myfile=openfile("look.txt",True)
+ 
+# Attempt to write "AZ" to the file, to see if this is allowed (it should be)
+try:
+    myfile.writeat("AZ",0)
+
+ 
+# It raised an Exception (as it was not supposed to):
+except ValueError:
+    log("System wouldn't let me write an Z as the second letter when there was no M!")
+ 
+finally:
+    # Close the file after our attempt.
+    myfile.close()

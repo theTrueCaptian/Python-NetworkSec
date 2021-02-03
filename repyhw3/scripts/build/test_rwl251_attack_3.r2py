@@ -1,0 +1,15 @@
+# Open a file
+myfile=openfile("look.txt",True)
+ 
+# Attempt to write "M" to the file, to see if this is allowed (it should be)
+try:
+    myfile.writeat("M",0)
+
+ 
+# It raised an Exception (as it was not supposed to):
+except ValueError:
+    log("System wouldn't let me write an M as the first letter when there was no Z!")
+ 
+finally:
+    # Close the file after our attempt.
+    myfile.close()

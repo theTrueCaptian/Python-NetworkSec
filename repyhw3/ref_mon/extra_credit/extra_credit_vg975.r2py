@@ -1,0 +1,75 @@
+"""
+
+This security layer is implemented to prevent an attacker from writing 'p0wnd' in the file.
+
+This security check raises ValueError same as primary security check (MZ). So if the data is "MZ and p0wnd" to be written at offset 0,
+first the exception for MZ is raised and then exception for p0wnd is raised. Hence the output would only show exception error message for p0wnd
+as it overwrites the ValueError exception from the primary reference monitor.
+
+"""	
+
+# Stores all the function calls
+CALL_LIST = []
+
+
+class SecureFile():
+  def __init__(self,fileobject):
+    self.fileobject = fileobject
+    self.filelockobject = createlock()
+
+  def readat(self,bytes,offset):
+    self.filelockobject.acquire(False)
+    CALL_LIST.append("readat")
+    return self.fileobject.readat(bytes,offset)
+    self.fileLock.acquire(False)
+
+  def writeat(self,data,offset):
+    self.filelockobject.acquire(True)
+    CALL_LIST.append("writeat")
+    
+    
+    #Check if the data contains the word 'p0wnd'. If the string is not present, find() function returns -1. 
+    #Hence if the data.find() function returns any other value, it means the data contains 'p0wnd' and exception is raised.
+
+    if data.find("p0wnd") != -1:	
+      raise ValueError("p0wnd cannot be written in the file!\n")
+    else:
+      CALL_LIST.append("writeat")
+      return self.fileobject.writeat(data,offset)
+    self.fileLock.acquire()
+
+	
+  def close(self):
+    CALL_LIST.append("close")
+    return self.fileobject.close()
+
+
+def secure_openfile(filename, create):
+  CALL_LIST.append("openfile")
+  
+  fileobject = openfile(filename,create)
+  return SecureFile(fileobject)
+
+# Code to map the above functions to function calls instead of calling API.
+
+TYPE="type"
+ARGS="args"
+RETURN="return"
+EXCP="exceptions"
+TARGET="target"
+FUNC="func"
+OBJC="objc"
+
+sec_file_def = {"obj-type":SecureFile,
+    "name":"SecureFile",
+    "readat":{TYPE:FUNC,ARGS:((int,long,type(None)),(int,long)),EXCP:Exception,RETURN:str,TARGET:SecureFile.readat},
+    "writeat":{TYPE:FUNC,ARGS:(str,(int,long)),EXCP:Exception,RETURN:(None),TARGET:SecureFile.writeat},
+    "close":{TYPE:FUNC,ARGS:None,EXCP:None,RETURN:(bool,type(None)),TARGET:SecureFile.close}
+}
+
+CHILD_CONTEXT_DEF["openfile"] = {TYPE:OBJC,ARGS:(str,bool),EXCP:Exception,RETURN:sec_file_def,TARGET:secure_openfile}
+
+
+#Dispatching the security module
+
+secure_dispatch_module()

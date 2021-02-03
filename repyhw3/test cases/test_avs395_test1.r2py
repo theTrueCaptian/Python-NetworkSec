@@ -1,0 +1,18 @@
+# Opening a file
+myfile=openfile("look.txt",True)
+ 
+# Attempt to write "MZ" to the file
+try:
+  myfile.writeat("MZ",1)
+ 
+# It raised an Exception :
+except ValueError:
+  log("Accuracy Bug Unable to write MZ at offset 1")
+ 
+# No Exception was raiseed (as it was supposed to)
+else:
+  pass #no output 
+ 
+finally:
+  # Closing the file after our attempt.
+  myfile.close()

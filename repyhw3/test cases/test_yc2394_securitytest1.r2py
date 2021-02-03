@@ -1,0 +1,18 @@
+# Open a file
+myfile=openfile("look.txt",True)
+ 
+# Attempt to write "MZ" to the file
+try:
+    #myfile.writeat("  \n  \t \n\t \t\n  "*5,0)
+    myfile.writeat("Z",1)
+    myfile.writeat("M",0)
+# It raised an Exception (as it was supposed to):
+except ValueError:
+    pass
+# No Exception was raise
+else:
+    log("Wrote an MZ!!!\n")
+ 
+finally:
+    # Close the file after our attempt.
+    myfile.close()

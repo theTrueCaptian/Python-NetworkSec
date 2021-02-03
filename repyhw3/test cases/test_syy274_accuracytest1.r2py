@@ -1,0 +1,32 @@
+# Test Case 1- Accuracy Test: Checks if a valid exception is thrown from the negative max file size.
+# Shao Yang
+
+idTest = 6
+filenameTest = "testfile_"+ str(idTest) + ".txt"
+
+# log("\n=======>Test Case " + str(idTest) + "<=======\n");
+
+try:
+  if filenameTest in listfiles():
+    removefile(filenameTest)
+  myfile=openfile(filenameTest,True)  #Open a file
+
+  try:
+    myfile.setmaxfilesize(-1);
+  except RepyArgumentError:
+    # log("Arguement Offset can't be -1\n")
+    pass
+  except ValueError:
+    pass
+  else:
+    raise Exception
+
+  #Close the file
+  myfile.close()
+
+except Exception as e:
+  log("===>Test Case: " + str(idTest) + " Failed\n")
+  # log("Error: Unknown Exception: " + str(e) + "\n")
+else:
+  pass
+  # log("Test Case - " + str(idTest) + " Passed\n")

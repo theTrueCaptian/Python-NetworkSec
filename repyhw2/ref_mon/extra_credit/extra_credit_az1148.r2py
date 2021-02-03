@@ -1,0 +1,113 @@
+# Andrew Zarenberg (az1148)
+# 
+# This code ensures the user cannot write "p0wnd" anywhere in the file using
+# the file.writeat(data, offset) function.
+#
+# First it checks to see if "p0wnd" is present in the data arg of writeat,
+# and if so raise an error immediately.
+# 
+# Else, check to see if any of the characters in "p0wnd" are present in the data
+# arg, and keep track of the index of the first and last instance of them.
+# If none of those chars are present in the data arg, we know it is safe and
+# the program can write
+# IF any of those chars are present, read from the file ONLY the parts that
+# could possibly result in "p0wnd" being present after the write, which is done
+# by reading from the 5 chars before the first instance to the 5 chars after the
+# first instance.  The data arg is then substituted in and is checked to see
+# if it would result in "p0wnd".  If it does, raise an error.  If not, write.
+#
+# *** NOTE: the variable 'WORD' is where "p0wnd" is stored.  This can EASILY be
+# edited to any other word to not allow.  This creates flexibility.
+
+
+
+TYPE="type"
+ARGS="args"
+RETURN="return"
+EXCP="exceptions"
+TARGET="target"
+FUNC="func"
+OBJC="objc"
+
+
+WORD = "p0wnd"
+
+
+class SafeFile():
+    def __init__(self, file):
+      	self.file = file
+
+    def writeat(self, data, offset):
+        if(WORD in data):
+	    raise ValueError("You can't write that")
+
+        else:
+	    range_start = -1
+	    range_end = -1
+
+	    for x in range(0, len(data)):
+	        if(data[x] in WORD):
+		    if(range_start == -1):
+		        range_start = x
+		    range_end = x
+
+            # if both ranges are 0, no characters in WORD are present and there
+            # is no threat
+            if(range_start != -1 and range_end != -1):
+	        range_start = offset+range_start-(len(WORD)-1)
+		range_end = offset+range_end+(len(WORD)-1)
+		if(range_start < 0):
+		    range_start = 0
+		
+		# get the local area that would be affected by change
+		fil = self.file.readat(range_end-range_start+1, range_start)
+
+		# 'fil' is now what the new local area would look like
+		fil = fil[0:(offset-range_start)]+data+fil[(offset-range_start+len(data)):]
+
+		# only need to check this local area
+		if(WORD in fil):
+		    raise ValueError("You can't write that")
+	        
+
+        return self.file.writeat(data, offset)
+        
+        """
+    	if(offset < 2):
+	    
+	    # check to see if attempting to write MZ all at once
+	    if(offset == 0 and data[:2] == "MZ"):
+	        raise ValueError("You can't write that")
+
+	    # check for writing "M" when the 2nd character is already "Z"
+	    elif(offset == 0 and data == "M" and self.file.readat(1,1) == "Z"):
+	        raise ValueError("You can't write that")
+
+	    # check for writing "Z" when the 1st character is already "M"
+	    elif(offset == 1 and data[:1] == "Z" and self.file.readat(1,0) == "M"):
+	        raise ValueError("You can't write that")
+
+        return self.file.writeat(data, offset)
+"""
+
+    def close(self):
+        return self.file.close()
+
+          
+
+safe_file_def = {"obj-type":SafeFile,
+                 "name":"SafeFile",
+                 "writeat":{TYPE:FUNC,ARGS:(str,(int,long)),EXCP:Exception,RETURN:None,TARGET:SafeFile.writeat},
+		 "close":{TYPE:FUNC,ARGS:None,EXCP:None,RETURN:(bool,type(None)),TARGET:SafeFile.close}
+		 }
+
+
+def safe_openfile(fname, create):
+    f = openfile(fname, create)
+    return SafeFile(f)
+
+
+CHILD_CONTEXT_DEF["openfile"] = {TYPE:OBJC,ARGS:(str,bool),EXCP:Exception,RETURN:safe_file_def,TARGET:safe_openfile}
+
+
+secure_dispatch_module()

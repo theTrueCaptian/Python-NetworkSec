@@ -1,0 +1,81 @@
+#extra_credit_jas1464.r2py
+#Jubin Soni (jas1464)
+
+#I have created this file for extra credit and in this reference monitor I am stopping all attempts to write "MZ" or "mz" ANYWHERE in the file.
+#To run this file please execute: "python repy.py restrictions.default encasementlib.r2py extra_credit_jas1464.r2py [attack_file].r2py" in the command prompt or teminal.
+
+#Defining constants for later use
+#these below are just the initializations which we are going to use in SEC_FILE_DEF and CHILD_CONTEXT_DEF
+FILE_TYPE="type"
+RETURN_TYPE="return"
+RM_ARGMNT="args"
+OBJECT="objc"
+SL_FUNCT="func"
+FILE_TARGT="target"
+EXCEPT="exceptions"
+
+
+#creating a list array to store all the application calls
+LIST = []
+
+
+class SecureLayer():
+#In class SecureLayer creating a self parameter to persist the value assigned to 'filopen', if I do not assign self.filopen then its value will be discarded when init
+# goes out of scope, setting self to SecureLayer object retains its value in the lifetime of the program
+
+  def __init__(self,user_fileopen):
+    self.user_fileopen = user_fileopen
+
+#creating a readat function to read data from the user_fileopen variable
+  def readat(self,size_limit,file_offset):
+    LIST.append("readat")
+    return self.user_fileopen.readat(size_limit,file_offset)
+
+#now creating another function that will allow users to write the data
+  def writeat(self,file_data,file_offset):
+    LIST.append("writeat")
+	
+	#checking the condition, if the data contains "MZ"
+	#in the beginning of the file and anywhere in the file
+
+    if ((("MZ") in file_data) or (("mz") in file_data) or (file_data.startswith("MZ")) or (file_data.startswith("mz"))):
+	#the ValueError can be caught at the attack layer but if user simply tries to write MZ without using try-except block then a long exception
+	#along with below message will be displayed
+		raise ValueError("Safely blocked an attempt to write data containing 'MZ' or 'mz'.")
+	#and else block will execute if data doesn't start ith MZ in the attack file
+    else:
+      LIST.append("writeat")
+      return self.user_fileopen.writeat(file_data,file_offset)
+	  
+#finally closing the file
+  def close(self):
+    LIST.append("close")
+    return self.user_fileopen.close()
+
+	
+#belwo function creats the file if not there and the it opens the file
+def secure_openfile(filename, create):
+  LIST.append("openfile")
+  user_fileopen = openfile(filename,create)
+  return SecureLayer(user_fileopen)
+
+#now assigning the objects and functions that are used in the reference_monitor, so these are just the mappings for our class
+SEC_FILE_DEF = {"obj-type":SecureLayer,
+    "name":"SecureLayer",
+    "readat":{FILE_TYPE:SL_FUNCT,RM_ARGMNT:((int,long,type(None)),(int,long)),EXCEPT:Exception,RETURN_TYPE:str,FILE_TARGT:SecureLayer.readat},
+    "writeat":{FILE_TYPE:SL_FUNCT,RM_ARGMNT:(str,(int,long)),EXCEPT:Exception,RETURN_TYPE:(None),FILE_TARGT:SecureLayer.writeat},
+    "close":{FILE_TYPE:SL_FUNCT,RM_ARGMNT:None,EXCEPT:None,RETURN_TYPE:(bool,type(None)),FILE_TARGT:SecureLayer.close}
+}
+
+#Here the openfile is name of the API function and secure_openfile is the name of our target function
+#since we want to call our function rather than the original API functions, so that the below code sets up the reference monitor
+CHILD_CONTEXT_DEF["openfile"] = {FILE_TYPE:OBJECT,RM_ARGMNT:(str,bool),EXCEPT:Exception,RETURN_TYPE:SEC_FILE_DEF,FILE_TARGT:secure_openfile}
+
+#dispatch code
+secure_dispatch_module()
+
+
+#References:
+#https://seattle.poly.edu/wiki/RepyV2Tutorial,
+#https://seattle.poly.edu/wiki/PythonVsRepy, and
+#https://seattle.poly.edu/wiki/RepyV2SecurityLayers

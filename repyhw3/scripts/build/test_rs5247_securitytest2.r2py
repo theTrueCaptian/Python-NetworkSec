@@ -1,0 +1,17 @@
+# Open a file
+myfile=openfile("look.txt",True)
+ 
+try:
+    myfile.writeat("Hello",0)
+ 
+# It raised an Exception (as it was supposed to):
+except ValueError:
+    log("Values other than MZ are being blocked!!!\n")
+ 
+# No Exception was raise
+else:
+    pass
+ 
+finally:
+    # Close the file after our attempt.
+    myfile.close()

@@ -1,0 +1,24 @@
+# Open a file
+myfile=openfile("look.txt", True)
+ 
+# Attempt to write "MZ" to the file
+try:
+
+  # Write the character one by one
+  # offset 0 in a newly created file)
+  myfile.writeat("Z", 1)
+  myfile.writeat("M", 0)
+ 
+# It raised an Exception :
+except ValueError:
+  #log("The security layer blocked a valid write!!!")
+  pass
+ 
+# No Exception was raised (as it wasn't supposed to)
+else:
+  log("Test 3: Wrote an MZ!!!\n")
+  pass
+ 
+finally:
+  # Close the file after our attempt.
+  myfile.close()

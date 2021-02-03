@@ -1,0 +1,13 @@
+# Open a file
+myfile=openfile("look.txt",True)
+
+# Attempt to write "MZ" to the file
+try:
+	myfile.writeat("MZ",6)
+
+except:
+	pass # action failed 
+
+finally:
+	# Close the file after our attempt.
+	myfile.close()

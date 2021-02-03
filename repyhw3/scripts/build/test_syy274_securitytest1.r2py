@@ -1,0 +1,35 @@
+# Test Case 2- Accuracy and Security Test: Checks is the file shorten if using the syntax setmaxfilesize
+# Shao Yang
+
+idTest = 3
+filenameTest = "testfile_"+ str(idTest) + ".txt"
+
+# log("\n=======>Test Case " + str(idTest) + "<=======\n");
+
+try:
+  if filenameTest in listfiles():
+    removefile(filenameTest)
+  myfile=openfile(filenameTest,True)  #Open a file
+
+  # put on file some initial data.
+  myfile.writeat("abcdefghijklmnopqrstuv",0)
+
+  #set maximum file size to 10
+  myfile.setmaxfilesize(10)
+
+  data = myfile.readat(None,0)
+  if data == "abcdefghij":
+    pass
+  else:
+    # log("Error: file not truncated\n")
+    raise Exception
+
+  #Close the file
+  myfile.close()
+
+except Exception as e:
+  log("===>Test Case: " + str(idTest) + " Failed\n")
+  # log("Error: Unknown Exception: " + str(e) + "\n")
+else:
+  pass
+  # log("Test Case - " + str(idTest) + " Passed\n")

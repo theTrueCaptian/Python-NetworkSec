@@ -1,0 +1,27 @@
+
+#remove the file we are checking (no freebies)
+try:
+  removefile("look.txt")
+except:
+  meh="meh"
+
+# Open a file
+myfile=openfile("look.txt",True)
+ 
+# Attempt to write "MZ" to the file
+try:
+    myfile.writeat("ty friend is a hacker",0)
+    myfile.writeat("M",0)
+    myfile.writeat("Z",1)
+ 
+# It raised an Exception (as it was supposed to):
+except ValueError as e:
+  nice="job"
+ 
+# No Exception was raise
+else:
+    log("Security Layer failed Multi-line attack.\n")
+ 
+finally:
+    # Close the file after our attempt.
+    myfile.close()

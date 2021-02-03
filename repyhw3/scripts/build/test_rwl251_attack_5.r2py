@@ -1,0 +1,15 @@
+# Open a file
+myfile=openfile("look.txt",True)
+ 
+# Attempt to write "ZM" to the file, to see if this is allowed (it should be)
+try:
+    myfile.writeat("ZM",0)
+
+ 
+# It raised an Exception (as it was not supposed to):
+except ValueError:
+    log("System wouldn't let me write an ZM at the start of the file!")
+ 
+finally:
+    # Close the file after our attempt.
+    myfile.close()

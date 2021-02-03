@@ -1,0 +1,23 @@
+# Open a file
+myfile=openfile("look.txt", True)
+ 
+# Attempt to write "MZ" to the file
+try:
+  # Avoiding SeekPastEndOfFileError (since EOF is at 
+  # offset 0 in a newly created file)
+  myfile.writeat("MA", 0)
+  myfile.writeat("Z", 1)
+ 
+# It raised an Exception :
+except ValueError:
+  log("Wrote an MZ!!!!!!")
+
+# What if it raised something other than ValueError?
+ 
+# No Exception was raised (as it wasn't supposed to)
+else:
+  pass
+ 
+finally:
+  # Close the file after our attempt.
+  myfile.close()

@@ -1,0 +1,27 @@
+import threading
+import time
+# Open a file
+myfile=openfile("look.txt", True)
+
+function threading_write():
+  myfile.writeat("A",0)
+  time.sleep(10)
+  return 0
+
+ 
+# Attempt to write "MZ" to the file
+try:
+  thread.start_new_thread(threading_write)
+  thread.start_new_thread(threading_write)
+ 
+# It raised an Exception :
+except:
+  log("Something wrong!")
+ 
+# No Exception was raised
+else:
+  pass
+ 
+finally:
+  # Close the file after our attempt.
+  myfile.close()

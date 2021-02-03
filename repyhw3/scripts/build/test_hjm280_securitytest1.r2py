@@ -1,0 +1,25 @@
+#Attempting to write M at offset 0 then z at offset 1
+
+# Open a file
+myfile=openfile("look.txt", True)
+ 
+# Attempt to write "MZ" to the file
+try:
+  myfile.writeat("M", 0)
+  myfile.writeat("Z", 1)
+ 
+# It raised an Exception :
+except ValueError:
+  # log("The security layer blocked properly!!!")
+  pass
+
+# What if it raised something other than ValueError?
+ 
+# No Exception was raised (as it wasn't supposed to)
+else:
+  log("FAILED TEST")
+  pass
+ 
+finally:
+  # Close the file after our attempt.
+  myfile.close()

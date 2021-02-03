@@ -1,0 +1,14 @@
+#checking for accuracy 
+myfile=openfile("look.txt",True)
+ 
+
+try:
+    myfile.writeat("MX",0)
+    
+if ValueError = 0:
+    log("circumvented the layer")
+ 
+ 
+finally:
+    
+    myfile.close()

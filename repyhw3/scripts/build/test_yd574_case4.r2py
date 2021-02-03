@@ -1,0 +1,19 @@
+# Open a file
+myfile=openfile("look.txt", True)
+num=0;
+# Attempt to write "MZ" pass eof, this should produce error
+try:
+    for line in myfile:
+        ++num
+    myfile.writeat("MZ", num+1)
+ 
+# It raised an Exception (as it was supposed to):
+except TypeError:
+    log("iteration over non-sequence")
+# No Exception was raised
+else:
+    log("Wrote an MZ after end of file!!!")
+ 
+finally:
+  # Close the file after our attempt.
+    myfile.close()

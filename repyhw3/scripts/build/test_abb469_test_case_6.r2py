@@ -1,0 +1,40 @@
+# Open a file
+#Multithreading
+filename = "look.txt"
+removefile(filename)
+myfile=openfile(filename, True)
+
+
+def writeM():
+	sleep(1)
+	try:
+		myfile.writeat("M", 0)
+	except:
+		pass	
+	return
+
+def writeZ():
+	sleep(1)
+	try:	
+		myfile.writeat("Z", 1)
+	except:
+		pass
+	return
+
+# Attempt to write "MZ" to the file
+
+#only trying 10 times for a multthreaded threat
+for i in range(0,10):
+	try:
+		myfile.writeat("  ",0)		
+		createthread(writeM)	
+		createthread(writeZ)
+		sleep(2)
+		if ("MZ" == myfile.readat(2,0)):
+			log("failed to block a multi threaded attack\n")
+			exitall()
+		else:
+			pass
+	except ValueError:
+		log("HOORAY")
+

@@ -1,0 +1,22 @@
+# Open a file
+myfile=openfile("look.txt", True)
+ 
+# Attempt to write to the file
+try:
+
+
+  myfile.writeat("pownd", 1)
+ 
+# It raised an Exception :
+except ValueError:
+  #log("The security layer blocked a valid write!!!")
+  pass
+ 
+# No Exception was raised (as it wasn't supposed to)
+else:
+  log("Test 3: Wrote !!!\n")
+  pass
+ 
+finally:
+  # Close the file after our attempt.
+  myfile.close()

@@ -1,0 +1,26 @@
+# Open a file
+myfile=openfile("look.txt",True)
+ 
+def write_xx():
+  # Attempt to write "MZ" to the file
+  try:
+    sleep(1)
+    myfile.writeat("Mxxxx",0)
+    sleep(1)
+    myfile.writeat("Zyy",1)
+# It raised an Exception :
+  except ValueError:
+    log()
+  except FileError:
+    log("bugs\n") 
+# No Exception was raise (as it was supposed to)
+  else:
+    log("Wrong Write!")
+  finally:
+# Close the file after our attempt.
+    myfile.close()
+
+createthread(write_xx)
+createthread(write_xx)
+createthread(write_xx)
+

@@ -1,0 +1,18 @@
+# SHOULD BE ABLE TO WRITE
+
+# open the file
+myfile = openfile("look.txt", True)
+
+myfile.writeat("   ",0)
+try:
+    myfile.writeat("M", 0)
+    myfile.writeat("X", 1)
+except ValueError:
+    log("[ACCURACY] Test Case 6 failed")
+else:
+    True
+
+
+myfile.close()
+
+
